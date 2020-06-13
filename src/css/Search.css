@@ -1,0 +1,12 @@
+.filter-box{
+    padding: 2% 3%;
+    line-height: 40px;
+    font-size: large;
+}
+
+input[type=text]{
+    display: inline-block;
+    width: 95%;
+    height: 25px;
+    font-size: large;
+}

@@ -1,0 +1,89 @@
+.name-box{
+    /*border: solid;*/
+    padding: 20px 0;
+    text-align: center;
+}
+
+.img-name{
+    /*border: solid;*/
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.img-author{
+    /*border: solid;*/
+    font-size: 14px;
+}
+
+.container{
+    /*border: solid;*/
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+@media (min-width: 300px) {
+    .left-box, .right-box{
+        width: 80%
+    }
+}
+
+@media (min-width: 700px) {
+    .left-box, .right-box{
+        width: 45%
+    }
+}
+
+.left-box{
+    /*border: solid;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+img{
+    max-width: 100%;
+    max-height: 400px;
+}
+
+.like-box, .detail-box, .like-btn{
+    margin: 10px;
+}
+
+.like-box .my-row-last{
+    color: #c23616;
+    height: 50px;
+    line-height: 50px;
+    font-size: 25px;
+    text-align: center;
+}
+
+.like-btn{
+    border-radius: 4px;
+    background: #c23616;
+    color: white;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.heart-icon, .heart-txt{
+    margin: 0 2%;
+}
+
+.right-box a{
+    text-decoration: none;
+    transition: .3s;
+}
+
+.right-box a:hover, .right-box a:active{
+    background: rgba(0, 128, 0, 0.6);
+}
+
+.description-box{
+    padding: 3% 4%;
+    text-indent: 2em;
+    line-height: 40px;
+}

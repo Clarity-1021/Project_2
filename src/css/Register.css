@@ -1,0 +1,186 @@
+html{
+    font-size: 9px;
+}
+
+@media (min-width: 320px){
+    html{
+        font-size: 8px;
+    }
+
+    .reg-box-outer{
+        height: 400px;
+    }
+
+    .reg-container{
+        padding: 25px;
+        width: 100%;
+    }
+}
+
+@media (min-width: 350px) {
+    .reg-box-outer{
+        height: 500px;
+    }
+
+    .reg-container{
+        padding: 50px;
+        width: 50%;
+    }
+}
+
+@media (min-width: 400px){
+    .reg-container{
+        padding: 55px;
+    }
+}
+
+@media (min-width: 450px) {
+    html{
+        font-size: 12px;
+    }
+
+    .reg-container {
+        padding: 60px;
+    }
+}
+
+@media (min-width: 550px) {
+    html{
+        font-size: 18px;
+    }
+
+    .reg-box-outer{
+        height: 600px;
+    }
+}
+
+body{
+    background: #f6f6f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.reg-title{
+    /*border: solid;*/
+    color: #ccc;
+    margin: 30px;
+    padding: 0;
+    font-size: 8rem;
+    letter-spacing: -0.3rem;
+    position: relative;
+    cursor: default;
+}
+
+.reg-title::after{
+    /*border: solid;*/
+    content: 'Register';
+    color: rgba(0, 128, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    /*-webkit-clip-path: ellipse(100px 100px at 0% 50%);*/
+    clip-path: ellipse(100px 100px at 0% 50%);
+    animation: spotlight 3s infinite;
+    background-image: url('../../img/jude-beck-wgw7lNVa3wk-unsplash.jpg');
+    background-size: 150%;
+    background-position: center center;
+    -webkit-background-clip: text;
+    /*background-clip: text;*/
+    cursor: default;
+}
+
+@keyframes spotlight{
+    0%{
+        -webkit-clip-path: ellipse(100px 100px at 0% 50%);
+        clip-path: ellipse(100px 100px at 0% 50%);
+    }
+
+    50%{
+        -webkit-clip-path: ellipse(100px 100px at 0% 50%);
+        clip-path: ellipse(100px 100px at 100% 50%);
+    }
+
+    100%{
+        -webkit-clip-path: ellipse(100px 100px at 0% 50%);
+        clip-path: ellipse(100px 100px at 0% 50%);
+    }
+}
+
+.reg-box-outer{
+    justify-content: center;
+    /*height: 600px;*/
+    width: 100%;
+    /*min-width: 400px;*/
+    display: flex;
+    align-items: center;
+}
+
+.reg-container{
+    /*border: solid;*/
+    max-width: 400px;
+    height: 326px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px 0 rgba(0, 128, 0, 0.25);
+    background-image: linear-gradient(to bottom right, rgba(0, 128, 0, 0.7), rgba(0, 128, 0, 0.3));
+}
+
+.title{
+    color: #fff;
+    font-size: 20px;
+    font-weight: 200;
+    cursor: default;
+}
+
+.underline-yellow{
+    border-bottom: 3px solid #f6e58d;
+}
+
+.input-container{
+    padding: 10px 0 15px 0;
+}
+
+input{
+    border: 0;
+    background: none;
+    outline: 0;
+    color: #fff;
+    font-size: 15px;
+    margin: 20px 0;
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #f6e58d;
+    transition: .2s;
+}
+
+input:hover{
+    border-bottom-color: #fff;
+}
+
+::-webkit-input-placeholder{
+    color: #fff;
+}
+
+.last-row{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.reg-btn{
+    background: rgba(0, 128, 0, 0.4);
+    display: flex;
+    padding: 5px 22px;
+    border-radius: .3em;
+    color: #f6e58d;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.reg-btn:hover, .reg-btn:active{
+    background: #fdfdfd;
+    color: rgba(0, 128, 0, 0.5);
+}

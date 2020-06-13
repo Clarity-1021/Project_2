@@ -1,0 +1,40 @@
+.submit-box{
+    padding: 2% 3%;
+    line-height: 40px;
+    font-size: large;
+}
+
+.photo-box{
+    /*border: solid;*/
+    max-width: 90%;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.photo-box img{
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+.upload-btn-box{
+    text-align: center;
+    width: 200px;
+    margin: 5px auto;
+}
+
+input[type=text]{
+    width: 95%;
+    height: 25px;
+    font-size: large;
+}
+
+.my-btn{
+    background: #d35400;
+}
+
+.my-btn:hover{
+    background: rgba(0, 128, 0, 0.6);
+}

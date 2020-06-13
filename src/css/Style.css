@@ -1,0 +1,360 @@
+body{
+    margin: 0;
+    background: #f6f6f6;
+    /*background: #f4f4f4;*/
+    /*background: #222222;*/
+}
+
+.my-container{
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+@media (min-width: 320px){
+    .logo{
+        padding: 5px 0;
+    }
+
+    .my-container-nav a{
+        padding: 12px 2px;
+    }
+
+    .dropdown-content-nav a{
+        padding: 12px 2px;
+    }
+}
+
+@media (min-width: 400px){
+    .my-container-nav a{
+        padding: 12px 10px;
+    }
+
+    .dropdown-content-nav a{
+        padding: 12px 10px;
+    }
+}
+
+@media (min-width: 600px){
+    .my-container-nav a{
+        padding: 12px 28px;
+    }
+
+    .dropdown-content-nav a{
+        padding: 12px 28px;
+    }
+}
+
+nav, footer{
+    background: rgba(0, 128, 0, 0.6);
+}
+
+.my-container-nav{
+    width: 100%;
+    max-width: 900px;
+    /*width: 930px;*/
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.my-container-nav a{
+    transition: .15s;
+    cursor:pointer;
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+}
+
+.logo{
+    display: inline-block;
+    vertical-align: middle;
+    color: white;
+    padding: 5px 20px;
+    font-size: x-large;
+}
+
+.highlight_off, .highlight_on{
+    border-bottom-style: solid;
+    border-width: 4px;
+}
+
+.highlight_off{
+    border-color: transparent;
+}
+
+.highlight_off:hover, .highlight_off:active, .highlight_on{
+    border-color: white;
+}
+
+.right-nav a:hover, .right-nav a:active{
+    background: rgba(0, 128, 0, 0.24);
+}
+
+.right-nav a.dropdown-nav{
+    border: none;
+}
+
+.dropdown-content-nav{
+    /*min-width: 145px;*/
+    display: none;
+    position: absolute;
+    background-color: #f6f6f6;
+    text-align: justify;
+}
+
+.dropdown-content-nav a{
+    transition: .15s;
+    color: black;
+    /*padding: 12px 28px;*/
+    display: block;
+}
+
+.right-nav:hover .dropdown-content-nav {
+    display: block;
+}
+
+.shadowed{
+    box-shadow:0px 1px 2px #8888885d;
+}
+
+.my-row, .my-row-last{
+    height: 45px;
+    width: 100%;
+    line-height: 45px;
+    box-shadow:0px 1px 2px #8888885d;
+    margin-top: 2px;
+}
+
+.title-box{
+    font-size: larger;
+    background: rgba(0, 128, 0, 0.6);
+    /*background: white;*/
+    /*background: #2f3640;*/
+    color: #fff;
+    /*color: rgba(0, 128, 0, 0.99);*/
+    box-shadow:0px 1px 2px #8888885d;
+    /*border-bottom: 2px solid rgba(0, 128, 0, 0.12);*/
+}
+
+.text-intent-default{
+    text-indent: 1.5em;
+}
+
+.my-footer{
+    width: 100%;
+    text-align: center;
+}
+
+.my-page-number{
+    background: white;
+    /*width: 290px;*/
+    /*text-indent: 15px;*/
+    text-align: center;
+    margin: 25px auto;
+    letter-spacing: 15px;
+    box-shadow:0px 1px 2px #8888885d;
+}
+
+.my-page-number a{
+    text-decoration: none;
+    color: rgb(0, 128, 0);
+}
+
+.my-page-number a:hover, .my-page-number a:active{
+    color: black;
+}
+
+.my-box{
+    margin: 25px 3%;
+}
+
+@media (min-width: 300px) {
+    .my-description-box p{
+        line-height: 22px;
+        font-size: 15px;
+        -webkit-line-clamp: 4;
+    }
+
+    .my-photo-box{
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .my-btn-box{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .my-img-box, .my-img-box img{
+        /*border: solid;*/
+        width: 150px;
+        height: 150px;
+    }
+
+    .my-description-box{
+        /*border: solid;*/
+        width: 80%;
+        height: 200px;
+    }
+}
+
+@media (min-width: 400px) {
+    .my-description-box p{
+        font-size: 17px;
+    }
+
+    .my-img-box, .my-img-box img{
+        width: 200px;
+        height: 200px;
+    }
+}
+
+@media (min-width: 520px){
+    .my-photo-box{
+        flex-wrap: nowrap;
+    }
+
+    .my-btn-box{
+        justify-content: flex-start;
+    }
+}
+
+@media (min-width: 600px) {
+    .my-description-box p{
+        line-height: 25px;
+        font-size: 18px;
+        -webkit-line-clamp: 5;
+    }
+
+    .my-img-box, .my-img-box img{
+        width: 250px;
+        height: 250px;
+    }
+
+    .my-description-box{
+        width: 60%;
+        height: 250px;
+    }
+}
+
+@media (min-width: 700px) {
+    .my-description-box p{
+        line-height: 30px;
+    }
+
+    .my-img-box, .my-img-box img{
+        width: 300px;
+        height: 300px;
+    }
+
+    .my-description-box{
+        width: 70%;
+        height: 300px;
+
+    }
+}
+
+.my-photo-box{
+    /*border: solid;*/
+    background: white;
+    padding: 0;
+    margin: 10px 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow:0px 1px 2px #8888885d;
+}
+
+.my-img-box{
+    padding: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.my-img-box img{
+    object-fit: cover;
+}
+
+.my-description-box{
+    /*height: 100%;*/
+    padding: 1%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /*align-items: flex-start;*/
+}
+
+.my-description-box p{
+    margin: 0;
+    /*border: solid;*/
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: 100%;
+}
+
+.my-description-box h3{
+    width: 100%;
+    display: block;
+}
+
+.my-btn{
+    text-indent: 15px;
+    letter-spacing: 15px;
+    font-size: medium;
+    margin: 20px 0;
+    background: rgba(0, 128, 0, 0.7);
+    display: inline-block;
+    text-align: center;
+    width: 110px;
+    height: 35px;
+    line-height: 35px;
+    border-radius: .2em;
+    color: white;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.my-btn:hover{
+    background: #c23616;
+    color: white;
+}
+
+.delete-btn, .modify-btn{
+    height: 35px;
+    line-height: 35px;
+    margin: 5px;
+    width: 100px;
+    text-indent: 12px;
+    letter-spacing: 12px;
+    font-size: medium;
+    display: inline-block;
+    text-align: center;
+    color: white;
+    border-radius: .2em;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.modify-btn{
+    background: #555;
+}
+
+.delete-btn{
+    background: #e15f41;
+}
+
+.modify-btn:hover, .delete-btn:hover{
+    background: rgba(0, 128, 0, 0.6);
+}
+
+.my-description-txt{
+    width: 95%;
+    font-size: large;
+    resize:none;
+}

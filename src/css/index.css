@@ -1,0 +1,251 @@
+html{
+    font-size: 9px;
+}
+
+@media (min-width: 320px){
+    html{
+        font-size: 11px;
+    }
+
+    .log-box-outer{
+        height: 250px;
+    }
+
+    .left-container{
+        padding: 25px;
+    }
+
+    .right-container{
+        padding: 25px 0;
+    }
+}
+
+@media (min-width: 350px) {
+    html{
+        font-size: 13px;
+    }
+
+    .log-box-outer{
+        height: 400px;
+    }
+
+    .left-container{
+        padding: 40px;
+    }
+
+    .right-container{
+        padding: 40px 0;
+    }
+}
+
+@media (min-width: 400px){
+    .left-container{
+        padding: 45px;
+    }
+
+    .right-container{
+        padding: 45px 0;
+    }
+}
+
+@media (min-width: 450px) {
+    html{
+        font-size: 15px;
+    }
+
+    .left-container{
+        padding: 60px;
+    }
+
+    .right-container{
+        padding: 60px 0;
+    }
+}
+
+@media (min-width: 550px) {
+    html{
+        font-size: 18px;
+    }
+
+    .log-box-outer{
+        height: 500px;
+    }
+
+    .left-container{
+        width: 55%;
+    }
+}
+
+body{
+    background: #f6f6f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.log-title{
+    /*border: black solid;*/
+    color: #ccc;
+    margin: 30px;
+    padding: 0;
+    font-size: 8rem;
+    letter-spacing: -0.3rem;
+    position: relative;
+    cursor: default;
+}
+
+.log-title::after{
+    /*border: solid;*/
+    content: attr(data-spotlight);
+    color: rgba(0, 128, 0, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    /*-webkit-clip-path: ellipse(100px 100px at 0% 50%);*/
+    clip-path: ellipse(100px 100px at 0% 50%);
+    animation: spotlight 3s infinite;
+    background-image: url('../../img/han-lahandoe-GkjabALRTN0-unsplash.jpg');
+    background-size: 150%;
+    background-position: center center;
+    -webkit-background-clip: text;
+    /*background-clip: text;*/
+    cursor: default;
+}
+
+@keyframes spotlight{
+    0%{
+        /*-webkit-clip-path: ellipse(100px 100px at 0% 50%);*/
+        clip-path: ellipse(100px 100px at 0% 50%);
+    }
+
+    50%{
+        /*-webkit-clip-path: ellipse(100px 100px at 0% 50%);*/
+        clip-path: ellipse(100px 100px at 100% 50%);
+    }
+
+    100%{
+        /*-webkit-clip-path: ellipse(100px 100px at 0% 50%);*/
+        clip-path: ellipse(100px 100px at 0% 50%);
+    }
+}
+
+.log-box-outer{
+    /*border: solid;*/
+    justify-content: center;
+    /*height: 500px;*/
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.log-container{
+    width: 90%;
+    max-width: 600px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px 0 rgba(0, 128, 0, 0.25);
+    background: rgba(0, 128, 0, 0.5);
+    display: flex;
+    justify-content: center;
+}
+
+.left-container{
+    max-width: 330px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    background-image: linear-gradient(to bottom right, rgba(0, 128, 0, 0.45), rgba(0, 128, 0, 0.05));
+}
+
+.title{
+    color: #fff;
+    font-size: 20px;
+    font-weight: 200;
+    cursor: default;
+}
+
+.underline-yellow{
+    border-bottom: 3px solid #f6e58d;
+}
+
+.input-container{
+    padding: 20px 0 10px 0;
+}
+
+input{
+    border: 0;
+    background: none;
+    outline: 0;
+    color: #fff;
+    font-size: 15px;
+    margin: 20px 0;
+    display: block;
+    width: 100%;
+    padding: 5px 0;
+    border-bottom: 1px solid #f6e58d;
+    transition: .2s;
+}
+
+input:hover{
+    border-bottom-color: #fff;
+}
+
+::-webkit-input-placeholder{
+    color: #fff;
+}
+
+.message{
+    /*border: white solid;*/
+    display: flex;
+}
+
+.message a{
+    text-decoration: none;
+    font-size: 14px;
+    color: #f6e58d;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.message a:hover{
+    color: #fff;
+}
+
+.right-container{
+    width: 40%;
+    /*height: calc(100% - 120px);*/
+    vertical-align: top;
+    /*padding: 60px 0;*/
+}
+
+.reg{
+    text-align: center;
+}
+
+.reg-hint{
+    display: flex;
+    height: 174px;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.last-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login-btn{
+    background: rgba(0, 128, 0, 0.4);
+    display: flex;
+    padding: 5px 22px;
+    border-radius: .3em;
+    color: #f6e58d;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.login-btn:hover{
+    background: #fdfdfd;
+    color: rgba(0, 128, 0, 0.5);
+}
