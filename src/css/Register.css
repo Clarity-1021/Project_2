@@ -121,10 +121,18 @@ body{
 .reg-container{
     /*border: solid;*/
     max-width: 400px;
-    height: 326px;
+    height: 350px;
     border-radius: 15px;
     box-shadow: 0 10px 30px 0 rgba(0, 128, 0, 0.25);
     background-image: linear-gradient(to bottom right, rgba(0, 128, 0, 0.7), rgba(0, 128, 0, 0.3));
+}
+
+.inputBox{
+    display: flex;
+    flex-direction: row;
+    justify-items: start;
+    align-items: center;
+    margin: 0;
 }
 
 .title{
@@ -148,12 +156,20 @@ input{
     outline: 0;
     color: #fff;
     font-size: 15px;
-    margin: 20px 0;
+    margin: 18px 0 0 0;
     display: block;
     width: 100%;
-    padding: 10px 0;
     border-bottom: 1px solid #f6e58d;
     transition: .2s;
+}
+
+.hint-message{
+    padding: 0;
+    margin:5px 0;
+    width: 100%;
+    font-size: 14px;
+    color: #f6e58d;
+    text-align: center
 }
 
 input:hover{
@@ -164,9 +180,21 @@ input:hover{
     color: #fff;
 }
 
+.message a{
+    text-decoration: none;
+    font-size: 14px;
+    color: #f6e58d;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.message a:hover{
+    color: #fff;
+}
+
 .last-row{
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
 }
 
