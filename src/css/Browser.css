@@ -8,10 +8,14 @@
 }
 
 @media (min-width: 300px) {
-    .photo-box, .photo-box img{
+    .photo-box img{
         /*border: solid;*/
         width: 120px;
         height: 120px;
+    }
+
+    .photo-box{
+        width: 50%;
     }
 
     .container{
@@ -24,10 +28,14 @@
 }
 
 @media (min-width: 400px) {
-    .photo-box, .photo-box img{
+    .photo-box img{
         /*border: solid;*/
         width: 80px;
         height: 80px;
+    }
+
+    .photo-box{
+        width: 25%;
     }
 
     .col-right{
@@ -36,7 +44,7 @@
 }
 
 @media (min-width: 500px) {
-    .photo-box, .photo-box img{
+    .photo-box img{
         /*border: solid;*/
         width: 90px;
         height: 90px;
@@ -48,7 +56,7 @@
 }
 
 @media (min-width: 600px) {
-    .photo-box, .photo-box img{
+    .photo-box img{
         /*border: solid;*/
         width: 110px;
         height: 110px;
@@ -60,7 +68,7 @@
 }
 
 @media (min-width: 700px) {
-    .photo-box, .photo-box img{
+    .photo-box img{
         /*border: solid;*/
         width: 80px;
         height: 80px;
@@ -77,7 +85,7 @@
 }
 
 @media (min-width: 800px) {
-    .photo-box, .photo-box img{
+    .photo-box img{
         /*border: solid;*/
         width: 90px;
         height: 90px;
@@ -94,7 +102,7 @@
 }
 
 @media (min-width: 900px) {
-    .photo-box, .photo-box img{
+    .photo-box img{
         /*border: solid;*/
         width: 110px;
         height: 110px;
@@ -111,7 +119,7 @@
 }
 
 @media (min-width: 1100px) {
-    .photo-box, .photo-box img{
+    .photo-box img{
         /*border: solid;*/
         width: 150px;
         height: 150px;
@@ -261,13 +269,20 @@
     background: white;
     width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     flex-wrap: wrap;
     box-shadow:0px 1px 2px #8888885d;
 }
 
 .photo-box img{
     object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+.photo-box a{
+    display: block;
+    width: 100%;
 }
 
 .photo-box{

@@ -61,26 +61,37 @@ img{
 
 .like-btn{
     border-radius: 4px;
-    background: #c23616;
+    /*background: #c23616;*/
     color: white;
     height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
+    text-decoration: none;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.notFavor{
+    background: #c23616;
+}
+
+.notFavor:hover{
+    background: rgba(0, 128, 0, 0.6);
+}
+
+.isFavor{
+    background: rgba(0, 128, 0, 0.6);
+}
+
+.isFavor:hover{
+    background: #c23616;
 }
 
 .heart-icon, .heart-txt{
     margin: 0 2%;
 }
 
-.right-box a{
-    text-decoration: none;
-    transition: .3s;
-}
-
-.right-box a:hover, .right-box a:active{
-    background: rgba(0, 128, 0, 0.6);
-}
 
 .description-box{
     padding: 3% 4%;

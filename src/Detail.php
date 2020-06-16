@@ -7,12 +7,205 @@ $mycenterflag = 'none';
 $loginflag = 'block';
 
 if(!isset($_SESSION['UserName'])){
-    echo"<script>alert('请登录后再访问此页面');history.go(-1);</script>";
+    echo "<script>alert('请登录后再访问此页面');history.go(-1);</script>";
 }
 else{
     $mycenterflag = 'block';
     $loginflag = 'none';
 }
+
+//获取所有参数的值的数组
+//function convertUrlQuery($query)
+//{
+//    $queryParts = explode('&', $query);
+//
+//    $params = array();
+//    foreach ($queryParts as $param) {
+//        $item = explode('=', $param);
+//        $params[$item[0]] = $item[1];
+//    }
+//
+//    return $params;
+//}
+
+//用UID找作者的用户名
+function queryAuthor($UID){
+    $result = '无';
+
+    if($UID !== NULL){
+        $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "SELECT * FROM traveluser WHERE UID=:uid";
+        $statement = $pdo->prepare($sql);
+        $statement->bindValue(':uid',$UID);
+        $statement->execute();
+
+        if($statement->rowCount()>0) {
+            $row = $statement->fetch();
+            $result = $row['UserName'];
+        }
+    }
+
+    return $result;
+}
+
+//用ImageID查询总收藏次数
+function queryFavorNum($ImageID){
+    $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = "SELECT * FROM travelimagefavor WHERE ImageID=:imgid";
+    $statement = $pdo->prepare($sql);
+    $statement->bindValue(':imgid',$ImageID);
+    $statement->execute();
+
+    return $statement->rowCount();
+}
+
+//用CountryCodeISO查询国家
+function queryCountry($ISO){
+    $result = '无';
+
+    if($ISO !== NULL){
+        $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "SELECT * FROM geocountries WHERE ISO=:iso";
+        $statement = $pdo->prepare($sql);
+        $statement->bindValue(':iso',$ISO);
+        $statement->execute();
+
+        if($statement->rowCount()>0) {
+            $row = $statement->fetch();
+            $result = $row['CountryName'];
+        }
+    }
+
+    return $result;
+}
+
+//用GeoNameID查询城市
+function queryCity($GeoNameID){
+    $result = '无';
+
+    if($GeoNameID !== NULL){
+        $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "SELECT * FROM geocities WHERE GeoNameID=:gnid";
+        $statement = $pdo->prepare($sql);
+        $statement->bindValue(':gnid',$GeoNameID);
+        $statement->execute();
+
+        if($statement->rowCount()>0) {
+            $row = $statement->fetch();
+            $result = $row['AsciiName'];
+        }
+    }
+
+    return $result;
+}
+
+//用UserName查询UID
+function queryUID($UserName){
+    $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = "SELECT * FROM traveluser WHERE UserName=:user";
+    $statement = $pdo->prepare($sql);
+    $statement->bindValue(':user',$UserName);
+    $statement->execute();
+    $row = $statement->fetch();
+    return $row['UID'];
+}
+
+//用ImageID和UID查询是否我收藏过
+function queryIsFavor($ImageID, $UID){
+    $result = false;
+
+    $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = "SELECT * FROM travelimagefavor WHERE ImageID=:imgid and UID=:uid";
+    $statement = $pdo->prepare($sql);
+    $statement->bindValue(':imgid',$ImageID);
+    $statement->bindValue(':uid',$UID);
+    $statement->execute();
+
+    if($statement->rowCount()>0) {
+        $result = true;
+    }
+    return $result;
+}
+
+//从url中获取此图片的ImageID
+//$query = $_SERVER["QUERY_STRING"];
+//$param_arr = convertUrlQuery($query);
+$ImageID = $_GET['ImageID'];
+
+//用ImageID找这个图片
+$pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$sql = "SELECT * FROM travelimage WHERE ImageID=:imgid";
+$statement = $pdo->prepare($sql);
+$statement->bindValue(':imgid',$ImageID);
+$statement->execute();
+
+if($statement->rowCount()>0) {
+    $row = $statement->fetch();
+}
+else{
+    echo "<script>alert('没有此图片');history.go(-1);</script>";
+}
+
+//获取标题
+$title = ($row['Title'] === NULL) ? '无' : $row['Title'];
+//获取作者
+$auther = queryAuthor($row['UID']);
+//获取收藏次数
+$favorNum = queryFavorNum($row['ImageID']);
+//获取主题
+$theme = ($row['Content'] === NULL) ? '无' : $row['Content'];
+//获取国家
+$country = queryCountry($row['CountryCodeISO']);
+//获取城市
+$city = queryCity($row['CityCode']);
+//获取描述
+$description = ($row['Description'] === NULL) ? '无' : $row['Description'];
+//获取图片PATH
+$path = '../img/travel-images/large/' . $row['PATH'];
+//获取UID
+$uid = queryUID($_SESSION['UserName']);
+//获取我是否收藏过这个图片
+$isFavor = queryIsFavor($row['ImageID'], $uid);
+
+$likeBtnStyle = $isFavor ? 'isFavor' : 'notFavor';
+$notText = $isFavor ? '已' : '未';
+$favorTitle = $isFavor ? '点击取消收藏' : '点击加入收藏';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if($isFavor){// 已收藏->取消收藏
+        $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "DELETE FROM travelimagefavor WHERE ImageID=:imgid and UID=:uid";
+        $statement = $pdo->prepare($sql);
+        $statement->bindValue(':imgid',$ImageID);
+        $statement->bindValue(':uid',$uid);
+        $statement->execute();
+    }
+    else{// 未收藏->加入收藏
+        $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "INSERT INTO travelimagefavor (UID, ImageID) VALUES (:uid, :imgid)";
+        $statement = $pdo->prepare($sql);
+        $statement->bindValue(':imgid',$ImageID);
+        $statement->bindValue(':uid',$uid);
+        $statement->execute();
+    }
+
+    $favorNum = queryFavorNum($row['ImageID']);
+    $isFavor = queryIsFavor($row['ImageID'], $uid);
+    $likeBtnStyle = $isFavor ? 'isFavor' : 'notFavor';
+    $notText = $isFavor ? '已' : '未';
+    $favorTitle = $isFavor ? '点击取消收藏' : '点击加入收藏';
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -59,38 +252,44 @@ else{
             <div class="my-row title-box text-intent-default">图片详情</div>
 
             <div class="name-box">
-                <div class="img-name">Lorem ipsum dolor.</div>
-                <div class="img-author">by Lorem ipsum.</div>
+                <div class="img-name"><?php echo $title;?></div>
+                <div class="img-author"><?php echo $auther;?></div>
             </div>
 
             <div class="container">
                 <div class="left-box">
-                    <img src="../img/normal/medium/6114904363.jpg" alt="图片" />
+                    <img src="<?php echo $path;?>" alt="<?php echo $title;?>" />
                 </div>
 
                 <div class="right-box">
                     <div class="like-box green-thin-border">
                         <div class="my-row title-box text-intent-default">收藏次数</div>
-                        <div class="my-row-last">99</div>
+                        <div class="my-row-last"><?php echo $favorNum;?></div>
                     </div>
 
                     <div class="detail-box green-thin-border">
                         <div class="my-row title-box text-intent-default">图片描述</div>
-                        <div class="my-row text-intent-default">主题：风景</div>
-                        <div class="my-row text-intent-default">拍摄国家：中国</div>
-                        <div class="my-row text-intent-default">拍摄城市：上海</div>
+                        <div class="my-row text-intent-default">主题：<?php echo $theme;?></div>
+                        <div class="my-row text-intent-default">拍摄国家：<?php echo $country;?></div>
+                        <div class="my-row text-intent-default">拍摄城市：<?php echo $city;?></div>
                     </div>
 
-                    <a class="like-btn" href="" onclick="alert('收藏成功')">
-                        <i class="fa fa-star heart-icon"></i>
-                        <span class="heart-txt">收藏</span>
-                    </a>
+                    <form id="handleFavor_form" name="handleFavor_form" action="" method="post">
+                        <div title="<?php echo $favorTitle;?>" class="like-btn <?php echo $likeBtnStyle;?>" onclick="handleFavor()">
+                            <i class="fa fa-star heart-icon"></i>
+                            <span class="heart-txt"><?php echo $notText;?>收藏</span>
+                        </div>
+                    </form>
+
+                    <script>
+                        function handleFavor() {
+                            document.getElementById('handleFavor_form').submit();
+                        }
+                    </script>
                 </div>
             </div>
 
-            <div class="description-box">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid animi architecto asperiores at, blanditiis distinctio eius, enim hic, incidunt ipsa iure laboriosam laudantium maxime nostrum praesentium quisquam rerum voluptates voluptatibus.
-            </div>
+            <div class="description-box"><?php echo $description;?></div>
         </div>
     </div>
 

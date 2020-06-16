@@ -49,7 +49,7 @@ function findHotImage($imageID) {
 function outputRandomImages() {
     $pdo = new PDO(DBCONNSTRING, DBUSER, DBPASS);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $sql = "SELECT * FROM `travelimage` WHERE ImageID >= (SELECT floor(RAND() * (SELECT MAX(ImageID) FROM `travelimage`))) ORDER BY ImageID LIMIT 6;";
+    $sql = "SELECT * FROM travelimage WHERE ImageID >= (SELECT floor(RAND() * (SELECT MAX(ImageID) FROM travelimage))) ORDER BY ImageID LIMIT 6;";
     $statement = $pdo->prepare($sql);
     $statement->execute();
 
@@ -70,7 +70,7 @@ function outputSingleImage($row) {
     $description = ($row['Description'] === NULL) ? '无' : $row['Description'];
 
     echo '<div class="photo-box shadowed">';
-    echo '<a href="./src/Detail.php">';
+    echo '<a href="./src/Detail.php?ImageID=' . $row['ImageID'] . '">';
     echo '<img src="./img/travel-images/medium/' . $row['PATH'] . '" class="shadowed-lg" alt="' . $title . '" />';
     echo '</a>';
     echo '<h4>' . $title . '</h4>';
@@ -123,14 +123,13 @@ function outputSingleImage($row) {
 
         <div class="photo-box-outer" id="displayImgs">
             <?php
-            if ($_SERVER["REQUEST_METHOD"] == "GET") {
+            if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 outputRandomImages();
             }
             else{
                 outputHotImages();
             }
             ?>
-
         </div>
     </div>
 
@@ -168,7 +167,7 @@ function outputSingleImage($row) {
             <i class="fa fa-chevron-up"></i>
         </a>
 
-        <form id="randomIMG_form" name="randomIMG_form" action="" method="get">
+        <form id="randomIMG_form" name="randomIMG_form" action="" method="post">
             <div class="assist-icon" id="refresh_btn" onclick="onRefresh();">
                 <i class="fa fa-refresh"></i>
             </div>
@@ -176,7 +175,6 @@ function outputSingleImage($row) {
 
         <script>
             function onRefresh(){
-                document.getElementById('displayImgs').innerHTML='';
                 document.getElementById('randomIMG_form').submit();
             }
         </script>
