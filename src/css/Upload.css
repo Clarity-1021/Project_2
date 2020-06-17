@@ -38,3 +38,40 @@ input[type=text]{
 .my-btn:hover{
     background: rgba(0, 128, 0, 0.6);
 }
+
+
+
+
+
+
+
+.select-box{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.input-select{
+    /*border: solid;*/
+    display: block;
+    width: 20%;
+    max-width: 200px;
+    min-width: 120px;
+    margin: 10px 0 10px 0.75%;
+}
+
+.input-box{
+    height: 40px;
+    width: 100%;
+    font-size: large;
+}
+
+.rounded{
+    border-radius: 5px;
+}
+
+

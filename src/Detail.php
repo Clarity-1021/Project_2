@@ -6,7 +6,7 @@ session_start();
 $mycenterflag = 'none';
 $loginflag = 'block';
 
-if(!isset($_SESSION['UserName'])){
+if(!isset($_SESSION['UID'])){
     echo "<script>alert('请登录后再访问此页面');history.go(-1);</script>";
 }
 else{
@@ -103,18 +103,6 @@ function queryCity($GeoNameID){
     return $result;
 }
 
-//用UserName查询UID
-function queryUID($UserName){
-    $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $sql = "SELECT * FROM traveluser WHERE UserName=:user";
-    $statement = $pdo->prepare($sql);
-    $statement->bindValue(':user',$UserName);
-    $statement->execute();
-    $row = $statement->fetch();
-    return $row['UID'];
-}
-
 //用ImageID和UID查询是否我收藏过
 function queryIsFavor($ImageID, $UID){
     $result = false;
@@ -170,7 +158,7 @@ $description = ($row['Description'] === NULL) ? '无' : $row['Description'];
 //获取图片PATH
 $path = '../img/travel-images/large/' . $row['PATH'];
 //获取UID
-$uid = queryUID($_SESSION['UserName']);
+$uid = $_SESSION['UID'];
 //获取我是否收藏过这个图片
 $isFavor = queryIsFavor($row['ImageID'], $uid);
 
@@ -204,8 +192,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $notText = $isFavor ? '已' : '未';
     $favorTitle = $isFavor ? '点击取消收藏' : '点击加入收藏';
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">

@@ -4,7 +4,7 @@ session_start();
 $mycenterflag = 'none';
 $loginflag = 'block';
 
-if(isset($_SESSION['UserName'])){
+if(isset($_SESSION['UID'])){
     $mycenterflag = 'block';
     $loginflag = 'none';
 }
@@ -17,7 +17,8 @@ function outputHotImages() {
     $statement = $pdo->prepare($sql);
     $statement->execute();
 
-    $imageNum = ($statement->rowCount() < 6) ? ($statement->rowCount()) : 6;
+    $imageNum = $statement->rowCount();
+    $imageNum = ($imageNum < 6) ? $imageNum : 6;
 
     while ($row = $statement->fetch()) {
         if ($row['ImageID'] !== NULL) {

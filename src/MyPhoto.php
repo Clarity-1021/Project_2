@@ -6,7 +6,7 @@ session_start();
 $mycenterflag = 'none';
 $loginflag = 'block';
 
-if(!isset($_SESSION['UserName'])){
+if(!isset($_SESSION['UID'])){
     echo"<script>alert('请登录后再访问此页面');history.go(-1);</script>";
 }
 else{

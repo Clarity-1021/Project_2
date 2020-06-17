@@ -4,7 +4,7 @@ session_start();
 $mycenterflag = 'none';
 $loginflag = 'block';
 
-if(isset($_SESSION['UserName'])){
+if(isset($_SESSION['UID'])){
     $mycenterflag = 'block';
     $loginflag = 'none';
 }
@@ -52,95 +52,174 @@ if(isset($_SESSION['UserName'])){
 
     <div class="my-container">
         <div class="my-box shadowed">
-            <form id="filter_form" name="filter_form" action="">
+            <form id="filter_form" name="filter_form" action="" method="get">
                 <div class="my-row title-box text-intent-default">筛选条件</div>
 
                 <div class="filter-box">
-                    <input checked type="radio" id="mode_title" name="filter_mode" />标题筛选<br />
-                    <input type="text" id="title_txt" name="title" /><br />
-                    <input type="radio" id="mode_description" name="filter_mode" />描述筛选<br />
+                    <input checked type="radio" id="mode_title" name="filter_mode" value="title" onchange="inputDisabled()" />标题筛选<br />
+                    <input type="text" id="title_txt" name="title"/><br />
+
+                    <input type="radio" id="mode_description" name="filter_mode" value="description" onchange="inputDisabled()" />描述筛选<br />
                     <textarea rows="6" id="description_txt" name="description" class="my-description-txt"></textarea>
-                    <div id="filter_btn" class="my-btn">筛选</div>
+
+                    <div id="filter_btn" class="my-btn" onclick="onSubmit();">筛选</div>
+                    <script>
+                        inputDisabled();
+
+                        function onSubmit() {
+                            document.getElementById('filter_form').submit();
+                        }
+
+                        function inputDisabled() {
+                            let model = document.getElementById('filter_form').filter_mode.value;
+                            console.log(model);
+                            if(model === 'title'){
+                                document.getElementById('description_txt').disabled = true;
+                                document.getElementById('title_txt').disabled = false;
+                            }
+                            else {
+                                document.getElementById('description_txt').disabled = false;
+                                document.getElementById('title_txt').disabled = true;
+                            }
+                        }
+                    </script>
                 </div>
             </form>
-
-            <script>
-                $(function(){
-                    $("#filter_btn").click(function () {
-                        alert('筛选成功');
-                        document:filter_form.submit();
-                    });
-                });
-            </script>
         </div>
 
         <div class="my-box">
             <div class="my-row title-box text-intent-default">搜索结果</div>
+            <?php
+            //模糊搜索图片标题
+            function queryOne($column, $value){
+                $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $sql = 'SELECT * FROM travelimage WHERE ' . $column . ' LIKE :val';
+                $statement = $pdo->prepare($sql);
+                $statement->bindValue(':val',$value);
+                $statement->execute();
 
-            <div class="my-photo-box">
-                <div class="my-img-box"><a href="Detail.php"><img src="../img/normal/medium/6114904363.jpg" alt="搜索结果图片" /></a></div>
+                return $statement;
+            }
 
-                <div class="my-description-box">
-                    <div class="my-txt-box">
-                        <h3>Lorem ipsum dolor.</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus corporis debitis dolorem earum incidunt laboriosam minus recusandae sapiente tempora ullam! Cum eos fuga natus, necessitatibus repudiandae sapiente sunt temporibus ullam?</p>
-                    </div>
-                </div>
-            </div>
+            //通过查找出的总图片个数获得总页数
+            function getPageNum($statement, $pageSize){
+                $result = 0;
 
-            <div class="my-photo-box">
-                <div class="my-img-box"><a href="Detail.php"><img src="../img/normal/medium/9494470337.jpg" alt="搜索结果图片" /></a></div>
+                if($statement->rowCount()>0) {
+                    $imgNum = $statement->rowCount();
+                    $result = ceil($imgNum / $pageSize);
+                    $result = ($result < 5) ? $result : 5;
+                }
 
-                <div class="my-description-box">
-                    <div class="my-txt-box">
-                        <h3>Lorem ipsum dolor.</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus corporis debitis dolorem earum incidunt laboriosam minus recusandae sapiente tempora ullam! Cum eos fuga natus, necessitatibus repudiandae sapiente sunt temporibus ullam?</p>
-                    </div>
-                </div>
-            </div>
+                return $result;
+            }
 
-            <div class="my-photo-box">
-                <div class="my-img-box"><a href="Detail.php"><img src="../img/normal/medium/8152045872.jpg" alt="搜索结果图片" /></a></div>
+            //输出单个图片
+            function outputSingleImg($row){
+                $imgTitle = ($row['Title'] === NULL) ? '无' : $row['Title'];
+                $imgDescription = ($row['Description'] === NULL) ? '无' : $row['Description'];
 
-                <div class="my-description-box">
-                    <div class="my-txt-box">
-                        <h3>Lorem ipsum dolor.</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus corporis debitis dolorem earum incidunt laboriosam minus recusandae sapiente tempora ullam! Cum eos fuga natus, necessitatibus repudiandae sapiente sunt temporibus ullam?</p>
-                    </div>
-                </div>
-            </div>
+                echo '<div class="my-photo-box">';
+                echo '<div class="my-img-box">';
+                echo '<a href="./Detail.php?ImageID=' . $row['ImageID'] . '">';
+                echo '<img src="../img/travel-images/medium/' . $row['PATH'] . '" alt="' . $imgTitle . '" />';
+                echo '</a>';
+                echo '</div>';
+                echo '<div class="my-description-box">';
+                echo '<div class="my-txt-box">';
+                echo '<h3>' . $imgTitle . '</h3>';
+                echo '<p>' . $imgDescription . '</p>';
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
+            }
 
-            <div class="my-photo-box">
-                <div class="my-img-box"><a href="Detail.php"><img src="../img/normal/medium/9493997865.jpg" alt="搜索结果图片" /></a></div>
+            //通过标题或描述模糊搜索输出所有图片
+            function outputImages($page, $pageSize, $column, $value){
+                $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $sql = 'SELECT * FROM travelimage WHERE '. $column .' LIKE :val LIMIT '. $page .', ' . $pageSize;
+                $statement = $pdo->prepare($sql);
+                $statement->bindValue(':val',$value);
+                $statement->execute();
 
-                <div class="my-description-box">
-                    <div class="my-txt-box">
-                        <h3>Lorem ipsum dolor.</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus corporis debitis dolorem earum incidunt laboriosam minus recusandae sapiente tempora ullam! Cum eos fuga natus, necessitatibus repudiandae sapiente sunt temporibus ullam?</p>
-                    </div>
-                </div>
-            </div>
+                //输出照片
+                while ($row = $statement->fetch()){
+                    outputSingleImg($row);
+                }
+            }
 
-            <div class="my-photo-box">
-                <div class="my-img-box"><a href="Detail.php"><img src="../img/normal/medium/5857398054.jpg" alt="搜索结果图片" /></a></div>
+            $pageSize = 4;//每页展示图片个数
+            $queryResult = -1;//查询结果
 
-                <div class="my-description-box">
-                    <div class="my-txt-box">
-                        <h3>Lorem ipsum dolor.</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus corporis debitis dolorem earum incidunt laboriosam minus recusandae sapiente tempora ullam! Cum eos fuga natus, necessitatibus repudiandae sapiente sunt temporibus ullam?</p>
-                    </div>
-                </div>
-            </div>
+            if(isset($_GET['filter_mode'])){
+                if(isset($_GET['title'])){
+                    $title = trim($_GET['title']);//去前后空格
+                    $title = '%' . $title . '%';
+                    $queryResult = queryOne('Title', $title);
+                }
+                elseif (isset($_GET['description'])){
+                    $description = trim($_GET['description']);//去前后空格
+                    $description = '%' . $description . '%';
+                    $queryResult = queryOne('Description', $description);
+                }
+            }
 
-            <div class="my-page-number">
-                <a href=""><i class="fa fa-angle-double-left"></i></a>
-                <a href="">1</a>
-                <a href="">2</a>
-                <a href="">3</a>
-                <a href="">4</a>
-                <a href="">5</a>
-                <a href=""><i class="fa fa-angle-double-right"></i></a>
-            </div>
+            if($queryResult !== -1){
+                $pageNum = getPageNum($queryResult, $pageSize);//总页数
+
+                if($pageNum == 0){
+                    echo '<div class="my-photo-box">';
+                    echo '<div style="text-align: center; width: 100%; color: gray">无结果</div>';
+                    echo '</div>';
+                }
+                else{
+                    $pageVal = 1;//当前页
+                    if (isset($_GET['page']) && ($_GET['page'] > 1) && ($_GET['page'] < 6)) {
+                        $pageVal = $_GET['page'];
+                    }
+                    $page = ($pageVal - 1) * $pageSize;
+                    $originQuery = '';
+
+                    if(isset($_GET['filter_mode'])){
+                        if(isset($_GET['title'])){
+                            outputImages($page, $pageSize, 'Title', $title);
+                            $originQuery = '?filter_mode=title&title=' . $_GET['title'];
+                        }
+                        elseif (isset($_GET['description'])){
+                            outputImages($page, $pageSize, 'Description', $description);
+                            $originQuery = '?filter_mode=description&description=' . $_GET['description'];
+                        }
+
+                        $prePage = $pageVal - 1;
+                        $nextPage = $pageVal + 1;
+
+                        //输出页码
+                        echo '<div class="my-page-number">';
+                        if ($pageVal !== 1){
+                            echo '<a href="./Search.php' . $originQuery . '&page=' . $prePage . '"><i class="fa fa-angle-double-left"></i></a>';
+                        }
+                        for($i = 1; $i <= $pageNum; $i++){
+                            echo '<a';
+                            if ($i == $pageVal){
+                                echo ' style="color: black"';
+                            }
+                            echo ' href="./Search.php' . $originQuery . '&page=' . $i . '">' . $i . '</a>';
+                        }
+                        if($pageVal != $pageNum){
+                            echo '<a href="./Search.php' . $originQuery . '&page=' . $nextPage . '"><i class="fa fa-angle-double-right"></i></a>';
+                        }
+                        echo '</div>';
+                    }
+                }
+            }
+            else{
+                echo '<div class="my-photo-box">';
+                echo '<div style="text-align: center; width: 100%; color: gray">未搜索</div>';
+                echo '</div>';
+            }
+            ?>
         </div>
     </div>
 

@@ -2,6 +2,8 @@
 require_once('./php/config.php');
 session_start();
 function validLogin(){
+    $result = NULL;
+
     $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
     $sql = "SELECT * FROM traveluser WHERE UserName=:user and Pass=:pass";
     $statement = $pdo->prepare($sql);
@@ -10,16 +12,19 @@ function validLogin(){
     $statement->execute();
 
     if($statement->rowCount()>0){
-        return true;
+        $row = $statement->fetch();
+        $result = $row['UID'];
     }
-    return false;
+
+    return $result;
 }
 
 $hintText = 'hidden';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if(validLogin()){
-        $_SESSION['UserName'] = $_POST['username'];
+    $UID = validLogin();
+    if($UID !== NULL){
+        $_SESSION['UID'] = $UID;
         header("Location: ../index.php");
     }
     else{
@@ -27,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-if(isset($_SESSION['UserName'])){
+if(isset($_SESSION['UID'])){
     header("Location: ../index.php");
 }
 ?>
