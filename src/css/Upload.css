@@ -20,9 +20,12 @@
 }
 
 .upload-btn-box{
-    text-align: center;
-    width: 200px;
     margin: 5px auto;
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
 }
 
 input[type=text]{
@@ -39,6 +42,16 @@ input[type=text]{
     background: rgba(0, 128, 0, 0.6);
 }
 
+.pr-5{
+    padding-right: 5px;
+}
+
+.hint-message{
+    text-align: center;
+    color: #d35400;
+    font-size: 16px;
+}
+
 
 
 
@@ -48,7 +61,7 @@ input[type=text]{
 .select-box{
     margin: 0;
     padding: 0;
-    width: 100%;
+    width: 95%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -72,6 +85,10 @@ input[type=text]{
 
 .rounded{
     border-radius: 5px;
+}
+
+.red{
+    color: #d35400;
 }
 
 

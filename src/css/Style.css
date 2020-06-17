@@ -339,6 +339,7 @@ nav, footer{
     border-radius: .2em;
     transition: .2s;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .modify-btn{

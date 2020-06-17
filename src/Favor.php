@@ -13,6 +13,15 @@ else{
     $mycenterflag = 'block';
     $loginflag = 'none';
 }
+
+if(isset($_GET['ImageID'])){
+    $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = 'DELETE FROM travelimagefavor WHERE ImageID=:imgid and UID=' . $_SESSION['UID'];
+    $statement = $pdo->prepare($sql);
+    $statement->bindValue(':imgid',$_GET['ImageID']);
+    $statement->execute();
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -58,91 +67,122 @@ else{
         <div class="my-box green-thin-border">
             <div class="my-row title-box text-intent-default">我的收藏</div>
 
-            <div class="my-photo-box">
-                <div class="my-img-box">
-                    <a href="Detail.php">
-                        <img src="../img/normal/medium/9494282329.jpg" alt="收藏图片" />
-                    </a>
-                </div>
+            <?php
 
-                <div class="my-description-box">
-                    <div class="my-txt-box">
-                        <h3>Lorem ipsum dolor.</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus corporis debitis dolorem earum incidunt laboriosam minus recusandae sapiente tempora ullam! Cum eos fuga natus, necessitatibus repudiandae sapiente sunt temporibus ullam?</p>
-                    </div>
+            //通过UID搜索我收藏过的图片
+            function queryMyFavors($UID){
+                $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $sql = "SELECT * FROM `travelimagefavor` WHERE UID=:uid";
+                $statement = $pdo->prepare($sql);
+                $statement->bindValue(':uid',$UID);
+                $statement->execute();
 
-                    <div class="my-btn-box">
-                        <div class="delete-btn" name="delete_btn_1" onclick="alert('删除成功')">删除</div>
-                    </div>
-                </div>
-            </div>
+                return $statement;
+            }
 
-            <div class="my-photo-box">
-                <div class="my-img-box">
-                    <a href="Detail.php">
-                        <img src="../img/normal/medium/8152048712.jpg" alt="收藏图片" />
-                    </a>
-                </div>
+            //通过查找出的总图片个数获得总页数
+            function getPageNum($statement, $pageSize){
+                $result = 0;
 
-                <div class="my-description-box">
-                    <div class="my-txt-box">
-                        <h3>Lorem ipsum dolor.</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus corporis debitis dolorem earum incidunt laboriosam minus recusandae sapiente tempora ullam! Cum eos fuga natus, necessitatibus repudiandae sapiente sunt temporibus ullam?</p>
-                    </div>
+                if($statement->rowCount()>0) {
+                    $imgNum = $statement->rowCount();
+                    $result = ceil($imgNum / $pageSize);
+                    $result = ($result < 5) ? $result : 5;
+                }
 
-                    <div class="my-btn-box">
-                        <div class="delete-btn" name="delete_btn_1" onclick="alert('删除成功')">删除</div>
-                    </div>
-                </div>
-            </div>
+                return $result;
+            }
 
-            <div class="my-photo-box">
-                <div class="my-img-box">
-                    <a href="Detail.php">
-                        <img src="../img/normal/medium/6592914823.jpg" alt="收藏图片" />
-                    </a>
-                </div>
+            //输出单个图片
+            function outputSingleImg($ImageID){
+                $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $sql = 'SELECT * FROM travelimage WHERE ImageID=:imgid';
+                $statement = $pdo->prepare($sql);
+                $statement->bindValue(':imgid',$ImageID);
+                $statement->execute();
 
-                <div class="my-description-box">
-                    <div class="my-txt-box">
-                        <h3>Lorem ipsum dolor.</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus corporis debitis dolorem earum incidunt laboriosam minus recusandae sapiente tempora ullam! Cum eos fuga natus, necessitatibus repudiandae sapiente sunt temporibus ullam?</p>
-                    </div>
+                if($statement->rowCount() > 0){
+                    $row = $statement->fetch();
+                    $imgTitle = ($row['Title'] === NULL) ? '无' : $row['Title'];
+                    $imgDescription = ($row['Description'] === NULL) ? '无' : $row['Description'];
 
-                    <div class="my-btn-box">
-                        <div class="delete-btn" name="delete_btn_1" onclick="alert('删除成功')">删除</div>
-                    </div>
-                </div>
-            </div>
+                    echo '<div class="my-photo-box shadowed">';
+                    echo '<div class="my-img-box">';
+                    echo '<a href="./Detail.php?ImageID=' . $row['ImageID'] . '">';
+                    echo '<img src="../img/travel-images/medium/' . $row['PATH'] . '" alt="' . $imgTitle . '" />';
+                    echo '</a>';
+                    echo '</div>';
+                    echo '<div class="my-description-box">';
+                    echo '<div class="my-txt-box">';
+                    echo '<h3>' . $imgTitle . '</h3>';
+                    echo '<p>' . $imgDescription . '</p>';
+                    echo '</div>';
+                    echo '<div class="my-btn-box">';
+                    echo '<a class="delete-btn" name="delete_btn_1" href="./Favor.php?ImageID=' . $row['ImageID'] . '">删除</a>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            }
 
-            <div class="my-photo-box">
-                <div class="my-img-box">
-                    <a href="Detail.php">
-                        <img src="../img/normal/medium/8710289254.jpg" alt="收藏图片" />
-                    </a>
-                </div>
+            //通过UID搜索输出所有图片
+            function outputImages($page, $pageSize, $UID){
+                $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $sql = 'SELECT * FROM `travelimagefavor` WHERE UID=:uid LIMIT '. $page .', ' . $pageSize;
+                $statement = $pdo->prepare($sql);
+                $statement->bindValue(':uid',$UID);
+                $statement->execute();
 
-                <div class="my-description-box">
-                    <div class="my-txt-box">
-                        <h3>Lorem ipsum dolor.</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus corporis debitis dolorem earum incidunt laboriosam minus recusandae sapiente tempora ullam! Cum eos fuga natus, necessitatibus repudiandae sapiente sunt temporibus ullam?</p>
-                    </div>
+                //输出照片
+                while ($row = $statement->fetch()){
+                    outputSingleImg($row['ImageID']);
+                }
+            }
 
-                    <div class="my-btn-box">
-                        <div class="delete-btn" name="delete_btn_1" onclick="alert('删除成功')">删除</div>
-                    </div>
-                </div>
-            </div>
+            $pageSize = 4;//每页展示图片个数
+            $uid = $_SESSION['UID'];
+            $queryResult = queryMyFavors($uid);
 
-            <div class="my-page-number">
-                <a href=""><i class="fa fa-angle-double-left"></i></a>
-                <a href="">1</a>
-                <a href="">2</a>
-                <a href="">3</a>
-                <a href="">4</a>
-                <a href="">5</a>
-                <a href=""><i class="fa fa-angle-double-right"></i></a>
-            </div>
+            $pageNum = getPageNum($queryResult, $pageSize);//总页数
+
+            if($pageNum == 0){
+                echo '<div class="my-photo-box">';
+                echo '<div style="text-align: center; width: 100%; color: gray">无图片</div>';
+                echo '</div>';
+            }
+            else{
+                $pageVal = 1;//当前页
+                if (isset($_GET['page']) && ($_GET['page'] > 1) && ($_GET['page'] < 6)) {
+                    $pageVal = $_GET['page'];
+                }
+                $page = ($pageVal - 1) * $pageSize;
+
+                outputImages($page, $pageSize, $uid);
+
+                $prePage = $pageVal - 1;
+                $nextPage = $pageVal + 1;
+
+                //输出页码
+                echo '<div class="my-page-number">';
+                if ($pageVal !== 1){
+                    echo '<a href="./Favor.php?page=' . $prePage . '"><i class="fa fa-angle-double-left"></i></a>';
+                }
+                for($i = 1; $i <= $pageNum; $i++){
+                    echo '<a';
+                    if ($i == $pageVal){
+                        echo ' style="color: black"';
+                    }
+                    echo ' href="./Favor.php?page=' . $i . '">' . $i . '</a>';
+                }
+                if($pageVal != $pageNum){
+                    echo '<a href="./Favor.php?page=' . $nextPage . '"><i class="fa fa-angle-double-right"></i></a>';
+                }
+                echo '</div>';
+            }
+            ?>
         </div>
     </div>
 

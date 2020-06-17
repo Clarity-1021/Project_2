@@ -14,20 +14,6 @@ else{
     $loginflag = 'none';
 }
 
-//获取所有参数的值的数组
-//function convertUrlQuery($query)
-//{
-//    $queryParts = explode('&', $query);
-//
-//    $params = array();
-//    foreach ($queryParts as $param) {
-//        $item = explode('=', $param);
-//        $params[$item[0]] = $item[1];
-//    }
-//
-//    return $params;
-//}
-
 //用UID找作者的用户名
 function queryAuthor($UID){
     $result = '无';
@@ -156,7 +142,7 @@ $city = queryCity($row['CityCode']);
 //获取描述
 $description = ($row['Description'] === NULL) ? '无' : $row['Description'];
 //获取图片PATH
-$path = '../img/travel-images/large/' . $row['PATH'];
+$path = '../img/travel-images/medium/' . $row['PATH'];
 //获取UID
 $uid = $_SESSION['UID'];
 //获取我是否收藏过这个图片
