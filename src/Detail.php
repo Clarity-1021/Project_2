@@ -107,9 +107,6 @@ function queryIsFavor($ImageID, $UID){
     return $result;
 }
 
-//从url中获取此图片的ImageID
-//$query = $_SERVER["QUERY_STRING"];
-//$param_arr = convertUrlQuery($query);
 $ImageID = $_GET['ImageID'];
 
 //用ImageID找这个图片

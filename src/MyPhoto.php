@@ -14,6 +14,70 @@ else{
     $loginflag = 'none';
 }
 
+//通过UID搜索我上传过的图片
+function queryMyImages($UID){
+    $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = "SELECT * FROM `travelimage` WHERE UID=:uid";
+    $statement = $pdo->prepare($sql);
+    $statement->bindValue(':uid',$UID);
+    $statement->execute();
+
+    return $statement;
+}
+
+//通过查找出的总图片个数获得总页数
+function getPageNum($statement, $pageSize){
+    $result = 0;
+
+    if($statement->rowCount()>0) {
+        $imgNum = $statement->rowCount();
+        $result = ceil($imgNum / $pageSize);
+        $result = ($result < 5) ? $result : 5;
+    }
+
+    return $result;
+}
+
+//输出单个图片
+function outputSingleImg($row){
+    $imgTitle = ($row['Title'] === NULL) ? '无' : $row['Title'];
+    $imgDescription = ($row['Description'] === NULL) ? '无' : $row['Description'];
+
+    echo '<div class="my-photo-box shadowed">';
+    echo '<div class="my-img-box">';
+    echo '<a href="./Detail.php?ImageID=' . $row['ImageID'] . '">';
+    echo '<img src="../img/travel-images/medium/' . $row['PATH'] . '" alt="' . $imgTitle . '" />';
+    echo '</a>';
+    echo '</div>';
+    echo '<div class="my-description-box">';
+    echo '<div class="my-txt-box">';
+    echo '<h3>' . $imgTitle . '</h3>';
+    echo '<p>' . $imgDescription . '</p>';
+    echo '</div>';
+    echo '<div class="my-btn-box">';
+    echo '<a class="modify-btn" name="modify_btn_1" href="./Upload.php?ImageID=' . $row['ImageID'] . '">修改</a>';
+    echo '<a class="delete-btn" name="delete_btn_1" href="./MyPhoto.php?ImageID=' . $row['ImageID'] . '">删除</a>';
+    echo '</div>';
+    echo '</div>';
+    echo '</div>';
+}
+
+//通过UID搜索输出所有图片
+function outputImages($page, $pageSize, $UID){
+    $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = 'SELECT * FROM `travelimage` WHERE UID=:uid LIMIT '. $page .', ' . $pageSize;
+    $statement = $pdo->prepare($sql);
+    $statement->bindValue(':uid',$UID);
+    $statement->execute();
+
+    //输出照片
+    while ($row = $statement->fetch()){
+        outputSingleImg($row);
+    }
+}
+
 if(isset($_GET['ImageID'])){
     $ImageID = $_GET['ImageID'];
 
@@ -34,6 +98,13 @@ if(isset($_GET['ImageID'])){
         $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = 'DELETE FROM travelimage WHERE ImageID=:imgid';
+        $statement = $pdo->prepare($sql);
+        $statement->bindValue(':imgid',$ImageID);
+        $statement->execute();
+
+        $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = 'DELETE FROM travelimagefavor WHERE ImageID=:imgid';
         $statement = $pdo->prepare($sql);
         $statement->bindValue(':imgid',$ImageID);
         $statement->execute();
@@ -84,70 +155,6 @@ if(isset($_GET['ImageID'])){
             <div class="my-row title-box text-intent-default">我的照片</div>
 
             <?php
-
-            //通过UID搜索我上传过的图片
-            function queryMyImages($UID){
-                $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $sql = "SELECT * FROM `travelimage` WHERE UID=:uid";
-                $statement = $pdo->prepare($sql);
-                $statement->bindValue(':uid',$UID);
-                $statement->execute();
-
-                return $statement;
-            }
-
-            //通过查找出的总图片个数获得总页数
-            function getPageNum($statement, $pageSize){
-                $result = 0;
-
-                if($statement->rowCount()>0) {
-                    $imgNum = $statement->rowCount();
-                    $result = ceil($imgNum / $pageSize);
-                    $result = ($result < 5) ? $result : 5;
-                }
-
-                return $result;
-            }
-
-            //输出单个图片
-            function outputSingleImg($row){
-                $imgTitle = ($row['Title'] === NULL) ? '无' : $row['Title'];
-                $imgDescription = ($row['Description'] === NULL) ? '无' : $row['Description'];
-
-                echo '<div class="my-photo-box shadowed">';
-                echo '<div class="my-img-box">';
-                echo '<a href="./Detail.php?ImageID=' . $row['ImageID'] . '">';
-                echo '<img src="../img/travel-images/medium/' . $row['PATH'] . '" alt="' . $imgTitle . '" />';
-                echo '</a>';
-                echo '</div>';
-                echo '<div class="my-description-box">';
-                echo '<div class="my-txt-box">';
-                echo '<h3>' . $imgTitle . '</h3>';
-                echo '<p>' . $imgDescription . '</p>';
-                echo '</div>';
-                echo '<div class="my-btn-box">';
-                echo '<a class="modify-btn" name="modify_btn_1" href="./Upload.php?ImageID=' . $row['ImageID'] . '">修改</a>';
-                echo '<a class="delete-btn" name="delete_btn_1" href="./MyPhoto.php?ImageID=' . $row['ImageID'] . '">删除</a>';
-                echo '</div>';
-                echo '</div>';
-                echo '</div>';
-            }
-
-            //通过UID搜索输出所有图片
-            function outputImages($page, $pageSize, $UID){
-                $pdo = new PDO(DBCONNSTRING,DBUSER,DBPASS);
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $sql = 'SELECT * FROM `travelimage` WHERE UID=:uid LIMIT '. $page .', ' . $pageSize;
-                $statement = $pdo->prepare($sql);
-                $statement->bindValue(':uid',$UID);
-                $statement->execute();
-
-                //输出照片
-                while ($row = $statement->fetch()){
-                    outputSingleImg($row);
-                }
-            }
 
             $pageSize = 4;//每页展示图片个数
             $uid = $_SESSION['UID'];

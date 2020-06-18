@@ -46,25 +46,6 @@ function findHotImage($imageID) {
     }
 }
 
-//随机选取6个图片
-function outputRandomImages() {
-    $pdo = new PDO(DBCONNSTRING, DBUSER, DBPASS);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $sql = "SELECT * FROM travelimage WHERE ImageID >= (SELECT floor(RAND() * (SELECT MAX(ImageID) FROM travelimage))) ORDER BY ImageID LIMIT 6;";
-    $statement = $pdo->prepare($sql);
-    $statement->execute();
-
-    $imageNum = ($statement->rowCount() < 6) ? ($statement->rowCount()) : 6;
-
-    while ($row = $statement->fetch()) {
-        if ($imageNum === 0) {
-            break;
-        }
-        $imageNum--;
-        outputSingleImage($row);
-    }
-}
-
 //展示图片
 function outputSingleImage($row) {
     $title = ($row['Title'] === NULL) ? '无' : $row['Title'];
@@ -123,14 +104,7 @@ function outputSingleImage($row) {
         <img src="img/normal/medium/9496560520.jpg" class="shadowed" alt="头图" width="100%" />
 
         <div class="photo-box-outer" id="displayImgs">
-            <?php
-            if ($_SERVER["REQUEST_METHOD"] === "POST") {
-                outputRandomImages();
-            }
-            else{
-                outputHotImages();
-            }
-            ?>
+            <?php outputHotImages();?>
         </div>
     </div>
 
@@ -168,15 +142,42 @@ function outputSingleImage($row) {
             <i class="fa fa-chevron-up"></i>
         </a>
 
-        <form id="randomIMG_form" name="randomIMG_form" action="" method="post">
-            <div class="assist-icon" id="refresh_btn" onclick="onRefresh();">
-                <i class="fa fa-refresh"></i>
-            </div>
-        </form>
+        <div class="assist-icon" id="refresh_btn" onclick="onRefresh();">
+            <i class="fa fa-refresh"></i>
+        </div>
 
         <script>
+            function showNewImages(images) {
+                let result = '';
+                for (let key in images){
+                    result = result + '<div class="photo-box shadowed">';
+                    result = result + '<a href="./src/Detail.php?ImageID=' + key + '">';
+                    result = result + '<img src="./img/travel-images/medium/' + images[key]['PATH'] + '" class="shadowed-lg" alt="' + images[key]['title'] + '" />';
+                    result = result + '</a>';
+                    result = result + '<h4>' + images[key]['title'] + '</h4>';
+                    result = result + '<div class="description">' + images[key]['description'] + '</div>';
+                    result = result + '</div>';
+                }
+                document.getElementById('displayImgs').innerHTML = result;
+            }
+
             function onRefresh(){
-                document.getElementById('randomIMG_form').submit();
+                let xmlhttp;
+                if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+                    xmlhttp = new XMLHttpRequest();
+                } else { // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        let images = JSON.parse(this.responseText);
+                        console.log(images);
+                        showNewImages(images);
+                    }
+                };
+                let url = "./src/php/randomSixImgs.php?sid=" + Math.random();
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
             }
         </script>
 
