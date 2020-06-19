@@ -1,8 +1,6 @@
 <?php
 require_once('./php/config.php');
-
 session_start();
-
 $mycenterflag = 'none';
 $loginflag = 'block';
 
@@ -309,7 +307,7 @@ function updateOne($column, $val, $ImageID){
                     <div class="select-box">
                         <div class="red" id="themeStar">* </div>
                         <div class="input-select">
-                            <select onchange="hasEmpty()" class="input-box rounded" name="theme" id="theme">
+                            <select onchange="hasEmpty();" class="input-box rounded" name="theme" id="theme">
                                 <option value="0">主题</option>
                                 <?php outputThemeOptions($isModify, $theme);?>
                             </select>
@@ -325,7 +323,7 @@ function updateOne($column, $val, $ImageID){
 
                         <div class="red" id="cityStar">* </div>
                         <div class="input-select" id="cityOptions">
-                            <select onchange="hasEmpty()" class="input-box rounded" name="city" id="city">
+                            <select onchange="hasEmpty();" class="input-box rounded" name="city" id="city">
                                 <option value="0">城市</option>
                                 <?php if($isModify){outputCityOptions($country, $city);}?>
                             </select>
@@ -354,8 +352,12 @@ function updateOne($column, $val, $ImageID){
         this.emptyHint(hasEmpty);
         if(!hasEmpty){
             if (!isModify){//上传
-                if (checkImg()){
+                let checkImg = this.checkImg();
+                if (checkImg){
                     document.getElementById('upload_form').submit();
+                }
+                else {
+                    emptyHint(!checkImg);
                 }
             }
             else {//修改
