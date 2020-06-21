@@ -30,6 +30,8 @@
 #### 1.哈希加盐-完成
     $salt=base64_encode(mcrypt_create_iv(32,MCRYPT_DEV_RANDOM));//随机生成树并通过base64加密，加长长度
     $password = sha1($password . $salt);//哈希
+	
+	***为了存盐和加盐后的哈希值，对原来的new_travel.sql做了修改，放在/src/sql里面了，如果要测试的话需要把数据库换成我新的才行
 
 ## 意见和建议
 TA写的PJ_2说明文档非常的详细和细致，没有什么疑问。老师的课程安排也非常合理，没有什么意见。
